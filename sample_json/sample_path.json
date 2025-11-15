@@ -9,7 +9,7 @@
       "index": 0,
       "type": "CommandBlock",
       "trigger": {
-        "condition": "start_main_path",`
+        "condition": "start_main_path",
         "commands": ["Log"]
       },
       "commands": ["FollowPath"],
@@ -61,3 +61,4 @@
 
   ]
 }
+
