@@ -1,0 +1,63 @@
+{
+  "pathName": "Auto",
+  "sampleRate": 1.0,
+  "pathVersion": "0.0.1",
+
+  "commands": [
+
+    {
+      "index": 0,
+      "type": "CommandBlock",
+      "trigger": {
+        "condition": "start_main_path",`
+        "commands": ["Log"]
+      },
+      "commands": ["FollowPath"],
+      "arguments": {
+        "points": [
+          { "index": 0, "x": 0, "y": 0, "angle": 0, "time": 0.0 },
+          { "index": 1, "x": 1, "y": 0, "angle": 0, "time": 1.0 }
+        ]
+      }
+    },
+
+    {
+      "index": 1,
+      "type": "Switch",
+      "condition": "should_turn_left",
+      "onTrue": [
+        {
+          "type": "CommandBlock",
+          "trigger": {
+            "condition": "start_left_path",
+            "commands": ["Log"]
+          },
+          "commands": ["FollowPath"],
+          "arguments": {
+            "points": [
+              { "index": 0, "x": 1, "y": 0, "angle": 90, "time": 1.0 },
+              { "index": 1, "x": 1, "y": 1, "angle": 90, "time": 2.0 }
+            ]
+          }
+        }
+      ],
+      "onFalse": [
+        {
+          "type": "CommandBlock",
+          "trigger": {
+            "condition": "start_right_path",
+            "commands": ["Log"]
+          }, 
+          "commands": ["FollowPath"],
+          "arguments": {
+            "points": [
+              { "index": 0, "x": 1, "y": 0, "angle": -90, "time": 1.0 },
+              { "index": 1, "x": 1, "y": -1, "angle": -90, "time": 2.0 }
+            ]
+          }
+        }
+      ]
+    }
+
+  ]
+}
