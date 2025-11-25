@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "path_name": "square_path",
+    "sample_rate": 0.5,
+    "version": "0.0.1"
+  },
+
+	"paths": [
+		{
+			"type": "path",
+			"index": 0,
+			"points": [
+			{
+				"index": 0,
+				"time": 0,
+				"x": 0,
+				"y": 0,
+				"angle": 0
+			},
+			{
+				"index": 1,
+				"time": 0.5,
+				"x": 1,
+				"y": 0,
+				"angle": 0
+			}					
+		},
+		{
+			name: "branched_path",
+			"points": [
+			{
+				"index": 0,
+				"time": 0,
+				"x": 0,
+				"y": 0,
+				"angle": 0
+			},
+			{
+				"index": 1,
+				"time": 0.5,
+				"x": 1,
+				"y": 0,
+				"angle": 0
+			}					
+		}
+	],
+  "schedule": [
+
+
+{
+"conditions":0,
+"triggers":0,
+"branched": false,
+}
+
+  ],
+}
