@@ -77,7 +77,7 @@ class PathData {
       _reindexCommands();
     }
   }
-
+  
   // Reindex all commands after removal
   void _reindexCommands() {
     for (int i = 0; i < commands.length; i++) {

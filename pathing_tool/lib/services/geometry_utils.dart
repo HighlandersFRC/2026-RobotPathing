@@ -39,4 +39,6 @@ class GeometryUtils {
     if (value > max) return max;
     return value;
   }
+
+  
 }

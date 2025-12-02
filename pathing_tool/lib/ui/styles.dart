@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class AppStyles {
   // Colors
-  static const Color primaryColor = Color(0xFF2196F3); // Blue
-  static const Color accentColor = Color(0xFF03A9F4); // Light Blue
-  static const Color backgroundColor = Color(0xFFF5F5F5); // Light Gray
-  static const Color gridBackgroundColor = Color(0xFFFFFFFF); // White
-  static const Color gridLineColor = Color(0xFFE0E0E0); // Gray
-  static const Color gridMajorLineColor = Color(0xFFBDBDBD); // Darker Gray
-  static const Color robotColor = Color(0xFF4CAF50); // Green
-  static const Color robotFrontIndicator = Color(0xFFFF5722); // Orange/Red
-  static const Color pointColor = Color(0xFF2196F3); // Blue
-  static const Color selectedPointColor = Color(0xFFFF9800); // Orange
-  static const Color pathLineColor = Color(0xFF9C27B0); // Purple
-  static const Color errorColor = Color(0xFFF44336); // Red
+  static const Color primaryColor = Color(0xFF2196F3); 
+  static const Color accentColor = Color(0xFF03A9F4); 
+  static const Color backgroundColor = Color(0xFFF5F5F5);
+  static const Color gridBackgroundColor = Color(0xFFFFFFFF); 
+  static const Color gridLineColor = Color(0xFFE0E0E0); 
+  static const Color gridMajorLineColor = Color(0xFFBDBDBD);
+  static const Color robotColor = Color(0xFF4CAF50); 
+  static const Color robotFrontIndicator = Color(0xFFFF5722); 
+  static const Color pointColor = Color(0xFF2196F3); 
+  static const Color selectedPointColor = Color(0xFFFF9800); 
+  static const Color pathLineColor = Color(0xFF9C27B0); 
+  static const Color errorColor = Color(0xFFF44336); 
   
   // Text Styles
   static const TextStyle titleStyle = TextStyle(

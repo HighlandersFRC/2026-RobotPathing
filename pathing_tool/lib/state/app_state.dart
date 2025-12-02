@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import '../models/path_data.dart';
-import '../models/robot_profile.dart';
+import 'package:pathing_tool/models/path_data.dart';
+import 'package:pathing_tool/models/robot_profile.dart';
 import 'undo_redo_service.dart';
 
 class AppState extends ChangeNotifier {

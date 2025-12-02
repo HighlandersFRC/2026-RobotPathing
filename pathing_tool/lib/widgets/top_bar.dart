@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../state/app_state.dart';
-import '../services/file_service.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/state/app_state.dart';
+import 'package:pathing_tool/services/file_service.dart';
+import 'package:pathing_tool/ui/styles.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   const TopBar({super.key});

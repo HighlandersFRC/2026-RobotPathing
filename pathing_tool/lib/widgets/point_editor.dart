@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/point_node.dart';
-import '../services/geometry_utils.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/models/point_node.dart';
+import 'package:pathing_tool/services/geometry_utils.dart';
+import 'package:pathing_tool/ui/styles.dart';
 
 class PointEditor extends StatefulWidget {
   final PointNode point;

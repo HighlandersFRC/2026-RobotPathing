@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-import '../models/point_node.dart';
-import '../models/robot_profile.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/models/point_node.dart';
+import 'package:pathing_tool/models/robot_profile.dart';
+import 'package:pathing_tool/ui/styles.dart';
 
 class GridCanvas extends StatefulWidget {
   final RobotProfile robotProfile;

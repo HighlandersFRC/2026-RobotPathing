@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import '../models/path_data.dart';
+import 'package:pathing_tool/models/path_data.dart';
 
 class FileService {
   // Export PathData to JSON file

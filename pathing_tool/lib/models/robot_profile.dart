@@ -21,11 +21,11 @@ class RobotProfile {
 
  
   static const RobotProfile defaultProfile = RobotProfile(
-    length: 0.9, // 0.9 meters
-    width: 0.8, // 0.8 meters 
-    maxVelocity: 4.0, // 4 m/s
-    maxAcceleration: 3.0, // 3 m/s²
-    maxCentripetalAcceleration: 2.5, // 2.5 m/s²
+    length: 1.0, 
+    width: 1.0, 
+    maxVelocity: 4.0,
+    maxAcceleration: 3.0, 
+    maxCentripetalAcceleration: 2.5, 
     fieldWidth: 10.0,
     fieldHeight: 10.0,
   );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/command_block.dart';
-import '../models/switch_block.dart';
-import '../state/app_state.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/models/command_block.dart';
+import 'package:pathing_tool/models/switch_block.dart';
+import 'package:pathing_tool/state/app_state.dart';
+import 'package:pathing_tool/ui/styles.dart';
 import 'command_block_widget.dart';
 
 class CommandList extends StatelessWidget {

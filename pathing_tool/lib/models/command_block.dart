@@ -45,7 +45,7 @@ class CommandBlock {
       'commands': commands,
       'arguments': arguments,
     };
-    
+
     if (index != null) {
       json['index'] = index;
     }

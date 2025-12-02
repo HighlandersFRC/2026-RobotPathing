@@ -27,14 +27,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../state/app_state.dart';
-import '../models/point_node.dart';
-import '../models/command_block.dart';
-import '../widgets/top_bar.dart';
-import '../widgets/grid_canvas.dart';
-import '../widgets/point_editor.dart';
-import '../widgets/command_list.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/state/app_state.dart';
+import 'package:pathing_tool/models/point_node.dart';
+import 'package:pathing_tool/models/command_block.dart';
+import 'package:pathing_tool/widgets/top_bar.dart';
+import 'package:pathing_tool/widgets/grid_canvas.dart';
+import 'package:pathing_tool/widgets/point_editor.dart';
+import 'package:pathing_tool/widgets/command_list.dart';
+import 'package:pathing_tool/ui/styles.dart';
 
 class PathEditorPage extends StatefulWidget {
   const PathEditorPage({super.key});
