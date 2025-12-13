@@ -7,7 +7,8 @@
       "index": 0,
       "type": "CommandBlock",
       "commands": [
-        "PurePursuitFollowPath"
+        "PurePursuitFollowPath",
+        "Log"
       ],
       "arguments": {
         "points": [
@@ -20,12 +21,13 @@
           },
           {
             "index": 1,
-            "x": 1,
+            "x": 2,
             "y": 0,
             "angle": 0,
             "time": 1.0
           }
-        ]
+        ],
+        "message": "Path One"
       }
     },
     {
@@ -33,7 +35,7 @@
       "type": "Switch",
       "condition": "should_turn_left",
       "conditionArguments": {
-        "value": 41
+        "value": 67
       },
       "onTrue": [
         {
@@ -45,14 +47,14 @@
             "points": [
               {
                 "index": 0,
-                "x": 1,
+                "x": 2,
                 "y": 0,
                 "angle": 0,
                 "time": 1.0
               },
               {
                 "index": 1,
-                "x": 1,
+                "x": 2,
                 "y": 1,
                 "angle": 0,
                 "time": 2.0
@@ -67,18 +69,19 @@
           "commands": [
             "FollowPath"
           ],
+          "condition": "should_turn_left",
           "arguments": {
             "points": [
               {
                 "index": 0,
-                "x": 1,
+                "x": 2,
                 "y": 0,
                 "angle": 0,
                 "time": 1.0
               },
               {
                 "index": 1,
-                "x": 1,
+                "x": 2,
                 "y": -1,
                 "angle": 0,
                 "time": 2.0
@@ -87,6 +90,16 @@
           }
         }
       ]
+    },
+    {
+      "index": 2,
+      "type": "CommandBlock",
+      "commands": [
+        "Log"
+      ],
+      "arguments": {
+        "message": "Auto Complete"
+      }
     }
   ]
 }

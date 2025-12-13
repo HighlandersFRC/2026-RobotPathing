@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.OI;
-import frc.robot.tools.controlloops.PID;
+import frc.robot.tools.math.PID;
 import frc.robot.tools.math.Vector;
 
 // **Zero Wheels with the bolt head showing on the left when the front side(battery) is facing down/away from you**
@@ -656,11 +656,6 @@ public class Drive extends SubsystemBase {
             firstPointX = Constants.Physical.FIELD_LENGTH - firstPointX;
             firstPointY = Constants.Physical.FIELD_WIDTH - firstPointY;
             firstPointAngle = Math.PI + firstPointAngle;
-        }
-
-        if (OI.isProcessorSide()) {
-            firstPointY = Constants.Physical.FIELD_WIDTH - firstPointY;
-            firstPointAngle = -firstPointAngle;
         }
 
         frontLeft.setDriveCurrentLimits(60, 120);
@@ -3255,11 +3250,6 @@ public class Drive extends SubsystemBase {
             currentTheta = Math.PI + currentTheta;
         }
 
-        if (OI.isProcessorSide()) {
-            currentY = Constants.Physical.FIELD_WIDTH - currentY;
-            currentTheta = -currentTheta;
-        }
-
         for (int i = currentIndex; i < pathPoints.length(); i++) {
             JSONObject point = pathPoints.getJSONObject(i);
             double targetX = point.getDouble("x"), targetY = point.getDouble("y"),
@@ -3313,11 +3303,6 @@ public class Drive extends SubsystemBase {
         if (m_fieldSide == "blue") {
             finalX = -finalX;
             finalY = -finalY;
-        }
-
-        if (OI.isProcessorSide()) {
-            finalY = -finalY;
-            finalTheta = -finalTheta;
         }
 
         Number[] velocityArray = new Number[] {
@@ -3454,10 +3439,7 @@ public class Drive extends SubsystemBase {
 
     public double getThetaToCenterReef() {
         double theta = 0.0;
-        if (OI.isRedSide()) {
-            theta = Math.atan2(Constants.Reef.centerRed.getY() - getMT2OdometryY(),
-                    Constants.Reef.centerRed.getX() - getMT2OdometryX());
-        } else {
+        {
             theta = Math.atan2((Constants.Reef.centerBlue.getY() - getMT2OdometryY()),
                     (Constants.Reef.centerBlue.getX() - getMT2OdometryX()));
         }

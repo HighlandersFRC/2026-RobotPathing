@@ -13,17 +13,6 @@ import edu.wpi.first.wpilibj.Filesystem;
 
 public class PathLoader {
 
-    public static class PosePoint {
-        public final double x, y, theta, time;
-
-        public PosePoint(double x, double y, double theta, double time) {
-            this.x = x;
-            this.y = y;
-            this.theta = theta;
-            this.time = time;
-        }
-    }
-
     public static List<PosePoint> loadPath(String relativePath) throws IOException {
         File file = new File(Filesystem.getDeployDirectory() + "/" + "Paths/" + relativePath);
         String content = Files.readString(file.toPath());

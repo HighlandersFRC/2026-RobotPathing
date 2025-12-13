@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Drive;
 import frc.robot.tools.PathLoader;
+import frc.robot.tools.PosePoint;
 import frc.robot.tools.math.Vector;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +18,7 @@ public class PurePursuitFollowPath extends Command {
     private final Drive drive;
     private final JSONArray rawPoints;
     private final JSONArray pointsWithVels;
-    private final List<PathLoader.PosePoint> points = new ArrayList<>();
+    private final List<PosePoint> points = new ArrayList<>();
     private int currentIndex = 0;
     private boolean odometrySet = false;
 
@@ -39,7 +40,7 @@ public class PurePursuitFollowPath extends Command {
 
         for (int i = 0; i < rawPoints.length(); i++) {
             JSONObject p = rawPoints.getJSONObject(i);
-            points.add(new PathLoader.PosePoint(
+            points.add(new PosePoint(
                     p.optDouble("x", 0.0),
                     p.optDouble("y", 0.0),
                     p.optDouble("angle", 0.0),

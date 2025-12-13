@@ -139,7 +139,7 @@ public class OI {
 
     public static double getDriverRightX() {
         double rightX = driverController.getRightX(), rightY = driverController.getRightY();
-        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.LEFT_STICK_DEADZONE) {
+        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.RIGHT_STICK_DEADZONE) {
             rightX = 0;
         }
         return rightX;
@@ -147,7 +147,7 @@ public class OI {
 
     public static double getDriverRightY() {
         double rightX = driverController.getRightX(), rightY = driverController.getRightY();
-        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.LEFT_STICK_DEADZONE) {
+        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.RIGHT_STICK_DEADZONE) {
             rightY = 0;
         }
         return rightY;
@@ -171,7 +171,7 @@ public class OI {
 
     public static double getOperatorRightX() {
         double rightX = operatorController.getRightX(), rightY = operatorController.getRightY();
-        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.LEFT_STICK_DEADZONE) {
+        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.RIGHT_STICK_DEADZONE) {
             rightX = 0;
         }
         return rightX;
@@ -179,7 +179,7 @@ public class OI {
 
     public static double getOperatorRightY() {
         double rightX = operatorController.getRightX(), rightY = operatorController.getRightY();
-        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.LEFT_STICK_DEADZONE) {
+        if (Math.hypot(rightX, rightY) < Constants.OperatorConstants.RIGHT_STICK_DEADZONE) {
             rightY = 0;
         }
         return rightY;
@@ -189,10 +189,6 @@ public class OI {
         return driverController.getRightTriggerAxis();
     }
 
-    // public static double getDriverLTPercent() {
-    // return driverController.getLeftTriggerAxis();
-    // }
-
     /**
      * This is for using the backup controller, the LT is 1.0 when it should be at
      * zero
@@ -200,12 +196,14 @@ public class OI {
      * code
      */
     public static double getDriverLTPercent() {
-        double raw = driverController.getLeftTriggerAxis();
-        if (raw > 0.9) {
-            raw = 0.0;
-        }
-        double refined = raw * (4.0 / 3.0);
-        return refined;
+        // extra deadzone logic for bad controller
+        // double raw = driverController.getLeftTriggerAxis();
+        // if (raw > 0.9) {
+        // raw = 0.0;
+        // }
+        // double refined = raw * (4.0 / 3.0);
+        // return refined;
+        return driverController.getLeftTriggerAxis();
     }
 
     public static boolean getDriverA() {
@@ -246,20 +244,6 @@ public class OI {
         } else {
             return false;
         }
-    }
-
-    public static boolean isRedSide() {
-        if (autoChooserConnected()) {
-            return !autoChooser.getRawButton(8);
-        } else if (DriverStation.isDSAttached()) {
-            return DriverStation.getAlliance().get() == DriverStation.Alliance.Red;
-        } else {
-            return true;
-        }
-    }
-
-    public static boolean isProcessorSide() {
-        return leftRight.getSelected().equals("processor");
     }
 
     public static boolean isRecalculateMode() {
