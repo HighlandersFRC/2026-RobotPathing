@@ -1,0 +1,105 @@
+{
+  "pathName": "Auto",
+  "sampleRate": 1.0,
+  "pathVersion": "0.0.1",
+  "commands": [
+    {
+      "index": 0,
+      "type": "CommandBlock",
+      "commands": [
+        "PurePursuitFollowPath",
+        "Log"
+      ],
+      "arguments": {
+        "points": [
+          {
+            "index": 0,
+            "x": 0,
+            "y": 0,
+            "angle": 0,
+            "time": 0.0
+          },
+          {
+            "index": 1,
+            "x": 2,
+            "y": 0,
+            "angle": 0,
+            "time": 1.0
+          }
+        ],
+        "message": "Path One"
+      }
+    },
+    {
+      "index": 1,
+      "type": "Switch",
+      "condition": "should_turn_left",
+      "conditionArguments": {
+        "value": 67
+      },
+      "onTrue": [
+        {
+          "type": "CommandBlock",
+          "commands": [
+            "FollowPath"
+          ],
+          "arguments": {
+            "points": [
+              {
+                "index": 0,
+                "x": 2,
+                "y": 0,
+                "angle": 0,
+                "time": 1.0
+              },
+              {
+                "index": 1,
+                "x": 2,
+                "y": 1,
+                "angle": 0,
+                "time": 2.0
+              }
+            ]
+          }
+        }
+      ],
+      "onFalse": [
+        {
+          "type": "CommandBlock",
+          "commands": [
+            "FollowPath"
+          ],
+          "condition": "should_turn_left",
+          "arguments": {
+            "points": [
+              {
+                "index": 0,
+                "x": 2,
+                "y": 0,
+                "angle": 0,
+                "time": 1.0
+              },
+              {
+                "index": 1,
+                "x": 2,
+                "y": -1,
+                "angle": 0,
+                "time": 2.0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "index": 2,
+      "type": "CommandBlock",
+      "commands": [
+        "Log"
+      ],
+      "arguments": {
+        "message": "Auto Complete"
+      }
+    }
+  ]
+}
