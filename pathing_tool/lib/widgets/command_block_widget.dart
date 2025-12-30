@@ -118,9 +118,9 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-import '../models/command_block.dart';
-import '../services/geometry_utils.dart';
-import '../ui/styles.dart';
+import 'package:pathing_tool/models/command_block.dart';
+import 'package:pathing_tool/services/geometry_utils.dart';
+import 'package:pathing_tool/ui/styles.dart';
 
 class CommandBlockWidget extends StatelessWidget {
   final CommandBlock commandBlock;
