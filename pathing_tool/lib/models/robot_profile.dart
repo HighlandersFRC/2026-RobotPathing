@@ -15,8 +15,8 @@ class RobotProfile {
     required this.maxVelocity,
     required this.maxAcceleration,
     required this.maxCentripetalAcceleration,
-    this.fieldWidth = 10.0,
-    this.fieldHeight = 10.0,
+    this.fieldWidth = 16.4592,
+    this.fieldHeight = 7.9248,
   });
 
  
