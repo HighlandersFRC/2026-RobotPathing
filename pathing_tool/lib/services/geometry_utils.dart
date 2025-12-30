@@ -75,8 +75,12 @@ class GeometryUtils {
   }
 
   static double clamp(double value, double min, double max) {
-    if (value < min) return min;
-    if (value > max) return max;
+    if (value < min) {
+      return min;
+    }
+    if (value > max) {
+      return max;
+    }
     return value;
   }
 }
@@ -85,11 +89,14 @@ class GeometryUtils {
 class CommandUtils {
   // Extract points from command arguments
   static List<PointNode>? getPointsFromCommand(CommandBlock command) {
-    if (!command.hasArgument('points')) return null;
-    
+    if (!command.hasArgument('points')){
+
+     return null;
+    }
     final pointsList = command.getArgument<List>('points');
-    if (pointsList == null) return null;
-    
+    if (pointsList == null) {
+      return null;
+    }
     try {
       return pointsList
           .map((p) => PointNode.fromJson(p as Map<String, dynamic>))
