@@ -27,7 +27,12 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // Load Autonomous (later)
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Autonomous Loading Coming Soon'),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
               },
               child: const Text('Load Autonomous'),
             ),
