@@ -1,18 +1,61 @@
+// import 'dart:math';
+
+// class GeometryUtils {
+//   // Convert degrees to radians
+//   static double degreesToRadians(double degrees) {
+//     return degrees * pi / 180.0;
+//   }
+
+//   // Convert radians to degrees
+//   static double radiansToDegrees(double radians) {
+//     return radians * 180.0 / pi;
+//   }
+
+
+//   // Normalize angle to be within -pi to pi range
+//   static double normalizeAngle(double radians) {
+//     double angle = radians % (2 * pi);
+//     if (angle > pi) {
+//       angle -= 2 * pi;
+//     } else if (angle < -pi) {
+//       angle += 2 * pi;
+//     }
+//     return angle;
+//   }
+
+//   // Calculate distance between two points
+//   static double distance(double x1, double y1, double x2, double y2) {
+//     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+//   }
+
+//   // Calculate angle between two points (in radians)
+//   static double angleBetweenPoints(double x1, double y1, double x2, double y2) {
+//     return atan2(y2 - y1, x2 - x1);
+//   }
+
+//   // Clamp a value between min and max
+//   static double clamp(double value, double min, double max) {
+//     if (value < min) return min;
+//     if (value > max) return max;
+//     return value;
+//   }
+
+  
+// }
 import 'dart:math';
+import 'package:pathing_tool/models/command_block.dart';
+import 'package:pathing_tool/models/point_node.dart';
 
 class GeometryUtils {
-  // Convert degrees to radians
   static double degreesToRadians(double degrees) {
     return degrees * pi / 180.0;
   }
 
-  // Convert radians to degrees
   static double radiansToDegrees(double radians) {
     return radians * 180.0 / pi;
   }
 
-
-  // Normalize angle to be within -pi to pi range
+  // Keep angle between -π and π
   static double normalizeAngle(double radians) {
     double angle = radians % (2 * pi);
     if (angle > pi) {
@@ -23,22 +66,47 @@ class GeometryUtils {
     return angle;
   }
 
-  // Calculate distance between two points
   static double distance(double x1, double y1, double x2, double y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
   }
 
-  // Calculate angle between two points (in radians)
   static double angleBetweenPoints(double x1, double y1, double x2, double y2) {
     return atan2(y2 - y1, x2 - x1);
   }
 
-  // Clamp a value between min and max
   static double clamp(double value, double min, double max) {
     if (value < min) return min;
     if (value > max) return max;
     return value;
   }
+}
 
+// Helpers for working with command arguments
+class CommandUtils {
+  // Extract points from command arguments
+  static List<PointNode>? getPointsFromCommand(CommandBlock command) {
+    if (!command.hasArgument('points')) return null;
+    
+    final pointsList = command.getArgument<List>('points');
+    if (pointsList == null) return null;
+    
+    try {
+      return pointsList
+          .map((p) => PointNode.fromJson(p as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error parsing points: $e');
+      return null;
+    }
+  }
   
+  // Save points to command arguments
+  static void setPointsInCommand(CommandBlock command, List<PointNode> points) {
+    command.setArgument('points', points.map((p) => p.toJson()).toList());
+  }
+  
+  static bool hasPoints(CommandBlock command) {
+    return command.hasArgument('points') && 
+           command.getArgument<List>('points') != null;
+  }
 }

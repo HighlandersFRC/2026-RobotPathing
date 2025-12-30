@@ -1,8 +1,9 @@
 import 'command_block.dart';
 
 class SwitchBlock {
+  static const String blockType = "Switch";
+  
   int index;
-  String type; 
   String condition; // various conditions to be met
   Map<String, dynamic> conditionArguments;
   List<CommandBlock> onTrue;
@@ -10,7 +11,6 @@ class SwitchBlock {
 
   SwitchBlock({
     required this.index,
-    this.type = "Switch",
     required this.condition,
     required this.conditionArguments,
     required this.onTrue,
@@ -21,7 +21,6 @@ class SwitchBlock {
   factory SwitchBlock.fromJson(Map<String, dynamic> json) {
     return SwitchBlock(
       index: json['index'] as int,
-      type: json['type'] as String? ?? "Switch",
       condition: json['condition'] as String,
       conditionArguments: json['conditionArguments'] as Map<String, dynamic>,
       onTrue: (json['onTrue'] as List)
@@ -37,7 +36,7 @@ class SwitchBlock {
   Map<String, dynamic> toJson() {
     return {
       'index': index,
-      'type': type,
+      'type': blockType,
       'condition': condition,
       'conditionArguments': conditionArguments,
       'onTrue': onTrue.map((cb) => cb.toJson()).toList(),

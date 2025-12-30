@@ -24,7 +24,7 @@ class PointNode {
     );
   }
 
-  // Convert to JSON
+  // Convert to JSON 
   Map<String, dynamic> toJson() {
     return {
       'index': index,

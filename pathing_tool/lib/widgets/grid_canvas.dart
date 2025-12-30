@@ -67,7 +67,7 @@ class _GridCanvasState extends State<GridCanvas> {
       ),
     );
   }
-
+  
   void _handleTap(Offset position, Size canvasSize) {
     // Convert screen coordinates to field coordinates
     final fieldPos = _screenToField(position, canvasSize);
@@ -83,7 +83,7 @@ class _GridCanvasState extends State<GridCanvas> {
         return;
       }
     }
-    
+    //above can be commented out later cause right now this does not allow clicking on the same area twice for two seperate points on top of each other
     // Otherwise add a new point
     widget.onPointAdded(fieldPos);
   }
@@ -94,7 +94,7 @@ class _GridCanvasState extends State<GridCanvas> {
         (screenPos.dy / canvasSize.height) * widget.robotProfile.fieldHeight;
     return Offset(x, y);
   }
-
+   
   Offset _fieldToScreen(Offset fieldPos, Size canvasSize) {
     final x = (fieldPos.dx / widget.robotProfile.fieldWidth) * canvasSize.width;
     final y = canvasSize.height - 
@@ -118,7 +118,7 @@ class GridPainter extends CustomPainter {
     required this.showConnections,
     this.hoverPosition,
     this.onPointTapped,
-  });
+  }); 
 
   @override
   void paint(Canvas canvas, Size size) {

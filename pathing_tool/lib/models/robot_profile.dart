@@ -26,8 +26,8 @@ class RobotProfile {
     maxVelocity: 4.0,
     maxAcceleration: 3.0, 
     maxCentripetalAcceleration: 2.5, 
-    fieldWidth: 10.0,
-    fieldHeight: 10.0,
+    fieldWidth: 16.4592,
+    fieldHeight: 7.9248,
   );
 
   
