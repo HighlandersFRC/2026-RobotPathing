@@ -7,25 +7,24 @@ class FileService {
   // Export PathData to JSON file
   static Future<bool> exportPath(PathData pathData) async {
     try {
-      // Get save location from user
-      String? outputPath = await FilePicker.platform.saveFile(
-        dialogTitle: 'Save Autonomous Path',
-        fileName: '${pathData.pathName}.json',
-        type: FileType.custom,
-        allowedExtensions: ['json'],
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath(
+        dialogTitle: 'Choose where to save the file',
       );
 
-      if (outputPath == null) {
+      if (selectedDirectory == null) {
         return false; // User cancelled
       }
+    
+      final fileName = '${pathData.pathName}.json';
+      final filePath = '$selectedDirectory${Platform.pathSeparator}$fileName';
 
       // Convert to JSON string with pretty formatting
       final jsonString = JsonEncoder.withIndent('  ').convert(pathData.toJson());
 
-      // Write to file
-      final file = File(outputPath);
+      final file = File(filePath);
       await file.writeAsString(jsonString);
 
+      print('Path exported to: $filePath');
       return true;
     } catch (e) {
       print('Error exporting path: $e');
@@ -36,7 +35,6 @@ class FileService {
   // Import PathData from JSON file
   static Future<PathData?> importPath() async {
     try {
-      // Let user pick a file
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -44,17 +42,21 @@ class FileService {
       );
 
       if (result == null || result.files.single.path == null) {
-        return null; // User cancelled
+        return null;
       }
 
-      // Read file content
       final file = File(result.files.single.path!);
       final jsonString = await file.readAsString();
 
       // Parse JSON
       final jsonData = jsonDecode(jsonString) as Map<String, dynamic>;
+      
+      if (!isValidPathJson(jsonData)) {
+        print('Invalid JSON format');
+        return null;
+      }
+      
       final pathData = PathData.fromJson(jsonData);
-
       return pathData;
     } catch (e) {
       print('Error importing path: $e');
@@ -62,7 +64,6 @@ class FileService {
     }
   }
 
-  // Validate JSON structure before importing
   static bool isValidPathJson(Map<String, dynamic> json) {
     try {
       return json.containsKey('pathName') &&

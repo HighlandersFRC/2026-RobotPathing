@@ -39,6 +39,7 @@ class CommandList extends StatelessWidget {
             ),
           );
         }
+        
 
         return ListView.builder(
           padding: const EdgeInsets.symmetric(vertical: AppStyles.smallPadding),

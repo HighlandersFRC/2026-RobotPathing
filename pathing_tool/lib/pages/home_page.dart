@@ -30,6 +30,7 @@ class HomePage extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('Autonomous Loading Coming Soon'),
+                    backgroundColor: Color.fromARGB(224, 80, 197, 244),
                     duration: Duration(seconds: 2),
                   ),
                 );

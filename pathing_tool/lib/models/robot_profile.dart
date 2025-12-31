@@ -15,19 +15,19 @@ class RobotProfile {
     required this.maxVelocity,
     required this.maxAcceleration,
     required this.maxCentripetalAcceleration,
-    this.fieldWidth = 16.4592,
-    this.fieldHeight = 7.9248,
+    this.fieldWidth = 17.548,
+    this.fieldHeight = 8.052,
   });
 
  
   static const RobotProfile defaultProfile = RobotProfile(
-    length: 1.0, 
-    width: 1.0, 
+    length: 0.8128, 
+    width: 0.6604, 
     maxVelocity: 4.0,
     maxAcceleration: 3.0, 
     maxCentripetalAcceleration: 2.5, 
-    fieldWidth: 16.4592,
-    fieldHeight: 7.9248,
+    fieldWidth: 17.548,
+    fieldHeight: 8.052,
   );
 
   

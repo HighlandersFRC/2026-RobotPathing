@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pathing_tool/state/app_state.dart';
 import 'package:pathing_tool/models/point_node.dart';
 import 'package:pathing_tool/models/command_block.dart';
+import 'package:pathing_tool/services/geometry_utils.dart';
 import 'package:pathing_tool/widgets/top_bar.dart';
 import 'package:pathing_tool/widgets/grid_canvas.dart';
 import 'package:pathing_tool/widgets/point_editor.dart';
@@ -21,6 +22,8 @@ class _PathEditorPageState extends State<PathEditorPage> {
   List<PointNode> _currentPoints = [];
   int? _selectedPointIndex;
   bool _showConnections = false;
+  final FocusNode _canvasFocusNode = FocusNode();
+  int? _editingCommandIndex; // Track which command is being edited
 
   @override
   void initState() {
@@ -35,203 +38,256 @@ class _PathEditorPageState extends State<PathEditorPage> {
   }
 
   @override
+  void dispose() {
+    _canvasFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<AppState>(
       builder: (context, appState, _) {
+        // Listen for command selection to load it for editing
+        if (appState.selectedCommandIndex != null && 
+            appState.selectedCommandIndex != _editingCommandIndex) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _loadCommandForEditing(appState, appState.selectedCommandIndex!);
+          });
+        }
+
         return Scaffold(
           appBar: const TopBar(),
-          body: KeyboardListener(
-            focusNode: FocusNode()..requestFocus(),
-            onKeyEvent: (event) => _handleKeyPress(event, appState),
-            child: Row(
-              children: [
-                // Left: Command list
-                SizedBox(
-                  width: 300,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(AppStyles.defaultPadding),
-                        color: AppStyles.primaryColor,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Commands',
-                              style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add, color: Colors.white),
-                              onPressed: () => _showAddCommandDialog(context, appState),
-                              tooltip: 'Add Command',
-                            ),
-                          ],
+          body: Row(
+            children: [
+              // Left: Command list
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(AppStyles.defaultPadding),
+                      color: AppStyles.primaryColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Commands',
+                            style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.add, color: Colors.white),
+                            onPressed: () => _showAddCommandDialog(context, appState),
+                            tooltip: 'Add Command',
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Expanded(child: CommandList()),
+                  ],
+                ),
+              ),
+              const VerticalDivider(width: 1),
+              // Center: Grid canvas
+              Expanded(
+                flex: 3,
+                child: Column(
+                  children: [
+                    // Toolbar
+                    Container(
+                      padding: const EdgeInsets.all(AppStyles.smallPadding),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey[300]!),
                         ),
                       ),
-                      const Expanded(child: CommandList()),
-                    ],
-                  ),
-                ),
-                const VerticalDivider(width: 1),
-                // Center: Grid canvas
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      // Toolbar
-                      Container(
-                        padding: const EdgeInsets.all(AppStyles.smallPadding),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[100],
-                          border: Border(
-                            bottom: BorderSide(color: Colors.grey[300]!),
+                      child: Row(
+                        children: [
+                          if (_editingCommandIndex != null)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: AppStyles.smallPadding,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppStyles.accentColor.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                'Editing Command ${_editingCommandIndex}',
+                                style: AppStyles.bodyStyle.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppStyles.primaryColor,
+                                ),
+                              ),
+                            ),
+                          if (_editingCommandIndex != null)
+                            const SizedBox(width: AppStyles.smallPadding),
+                          Text(
+                            'Points: ${_currentPoints.length}',
+                            style: AppStyles.bodyStyle,
+                          ),
+                          const SizedBox(width: AppStyles.defaultPadding),
+                          ElevatedButton.icon(
+                            onPressed: _currentPoints.length >= 2
+                                ? () {
+                                    setState(() {
+                                      _showConnections = !_showConnections;
+                                    });
+                                  }
+                                : null,
+                            icon: Icon(_showConnections ? Icons.link_off : Icons.link),
+                            label: Text(_showConnections ? 'Hide Path' : 'Connect Points'),
+                          ),
+                          const SizedBox(width: AppStyles.smallPadding),
+                          ElevatedButton.icon(
+                            onPressed: _currentPoints.isNotEmpty
+                                ? () => _saveCurrentPath(context, appState)
+                                : null,
+                            icon: const Icon(Icons.check),
+                            label: Text(_editingCommandIndex != null ? 'Update Command' : 'Save to Commands'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppStyles.accentColor,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (_currentPoints.isNotEmpty)
+                            TextButton.icon(
+                              onPressed: () {
+                                setState(() {
+                                  _currentPoints.clear();
+                                  _selectedPointIndex = null;
+                                  _showConnections = false;
+                                  _editingCommandIndex = null;
+                                });
+                                appState.selectCommand(null);
+                              },
+                              icon: const Icon(Icons.clear, color: AppStyles.errorColor),
+                              label: const Text('Clear All'),
+                            ),
+                        ],
+                      ),
+                    ),
+                    // Grid with keyboard shortcuts
+                    Expanded(
+                      child: Focus(
+                        focusNode: _canvasFocusNode,
+                        onKeyEvent: (node, event) {
+                          if (event is KeyDownEvent) {
+                            // Delete selected point
+                            if (event.logicalKey == LogicalKeyboardKey.delete ||
+                                event.logicalKey == LogicalKeyboardKey.backspace) {
+                              if (_selectedPointIndex != null) {
+                                setState(() {
+                                  _currentPoints.removeAt(_selectedPointIndex!);
+                                  _reindexPoints();
+                                  _selectedPointIndex = null;
+                                });
+                                return KeyEventResult.handled;
+                              }
+                            }
+                          }
+                          return KeyEventResult.ignored;
+                        },
+                        child: GestureDetector(
+                          onTap: () => _canvasFocusNode.requestFocus(),
+                          child: GridCanvas(
+                            robotProfile: appState.robotProfile,
+                            points: _currentPoints,
+                            selectedPointIndex: _selectedPointIndex,
+                            showConnections: _showConnections,
+                            onPointAdded: _addPoint,
+                            onPointSelected: (index) {
+                              setState(() {
+                                _selectedPointIndex = index;
+                              });
+                            },
                           ),
                         ),
-                        child: Row(
-                          children: [
-                            Text(
-                              'Points: ${_currentPoints.length}',
-                              style: AppStyles.bodyStyle,
-                            ),
-                            const SizedBox(width: AppStyles.defaultPadding),
-                            ElevatedButton.icon(
-                              onPressed: _currentPoints.length >= 2
-                                  ? () {
-                                      setState(() {
-                                        _showConnections = !_showConnections;
-                                      });
-                                    }
-                                  : null,
-                              icon: Icon(_showConnections ? Icons.link_off : Icons.link),
-                              label: Text(_showConnections ? 'Hide Path' : 'Connect Points'),
-                            ),
-                            const SizedBox(width: AppStyles.smallPadding),
-                            ElevatedButton.icon(
-                              onPressed: _currentPoints.isNotEmpty
-                                  ? () => _saveCurrentPath(context, appState)
-                                  : null,
-                              icon: const Icon(Icons.check),
-                              label: const Text('Save to Commands'),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppStyles.accentColor,
-                              ),
-                            ),
-                            const Spacer(),
-                            if (_currentPoints.isNotEmpty)
-                              TextButton.icon(
-                                onPressed: () {
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const VerticalDivider(width: 1),
+              // Right: Point properties
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(AppStyles.defaultPadding),
+                      color: AppStyles.primaryColor,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Point Properties',
+                            style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: _selectedPointIndex != null &&
+                              _selectedPointIndex! < _currentPoints.length
+                          ? SingleChildScrollView(
+                              key: ValueKey(_selectedPointIndex),
+                              child: PointEditor(
+                                key: ValueKey('point_${_selectedPointIndex}_${_currentPoints[_selectedPointIndex!].x}_${_currentPoints[_selectedPointIndex!].y}'),
+                                point: _currentPoints[_selectedPointIndex!],
+                                onPointChanged: (updatedPoint) {
                                   setState(() {
-                                    _currentPoints.clear();
-                                    _selectedPointIndex = null;
-                                    _showConnections = false;
+                                    _currentPoints[_selectedPointIndex!] = updatedPoint;
                                   });
                                 },
-                                icon: const Icon(Icons.clear, color: AppStyles.errorColor),
-                                label: const Text('Clear All'),
+                                onDelete: () {
+                                  setState(() {
+                                    _currentPoints.removeAt(_selectedPointIndex!);
+                                    _reindexPoints();
+                                    _selectedPointIndex = null;
+                                  });
+                                },
                               ),
-                          ],
-                        ),
-                      ),
-                      // Grid
-                      Expanded(
-                        child: GridCanvas(
-                          robotProfile: appState.robotProfile,
-                          points: _currentPoints,
-                          selectedPointIndex: _selectedPointIndex,
-                          showConnections: _showConnections,
-                          onPointAdded: _addPoint,
-                          onPointSelected: (index) {
-                            setState(() {
-                              _selectedPointIndex = index;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const VerticalDivider(width: 1),
-                // Right: Point properties
-                SizedBox(
-                  width: 300,
-                  child: Column(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(AppStyles.defaultPadding),
-                        color: AppStyles.primaryColor,
-                        child: Row(
-                          children: [
-                            Text(
-                              'Point Properties',
-                              style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
+                            )
+                          : Center(
+                              child: Text(
+                                'Select a point to edit',
+                                style: AppStyles.captionStyle,
+                              ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: _selectedPointIndex != null &&
-                                _selectedPointIndex! < _currentPoints.length
-                            ? SingleChildScrollView(
-                                key: ValueKey(_selectedPointIndex),
-                                child: PointEditor(
-                                  key: ValueKey('point_${_selectedPointIndex}_${_currentPoints[_selectedPointIndex!].x}_${_currentPoints[_selectedPointIndex!].y}'),
-                                  point: _currentPoints[_selectedPointIndex!],
-                                  onPointChanged: (updatedPoint) {
-                                    setState(() {
-                                      _currentPoints[_selectedPointIndex!] = updatedPoint;
-                                    });
-                                  },
-                                  onDelete: () {
-                                    setState(() {
-                                      _currentPoints.removeAt(_selectedPointIndex!);
-                                      _reindexPoints();
-                                      _selectedPointIndex = null;
-                                    });
-                                  },
-                                ),
-                              )
-                            : Center(
-                                child: Text(
-                                  'Select a point to edit',
-                                  style: AppStyles.captionStyle,
-                                ),
-                              ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
     );
   }
 
-  void _handleKeyPress(KeyEvent event, AppState appState) {
-    if (event is KeyDownEvent) {
-      // Undo/redo shortcuts
-      if (event.logicalKey == LogicalKeyboardKey.keyZ &&
-          HardwareKeyboard.instance.isControlPressed) {
-        appState.undoRedoService.undo();
-      } else if (event.logicalKey == LogicalKeyboardKey.keyY &&
-          HardwareKeyboard.instance.isControlPressed) {
-        appState.undoRedoService.redo();
-      }
-      // Delete selected point
-      else if (event.logicalKey == LogicalKeyboardKey.delete ||
-          event.logicalKey == LogicalKeyboardKey.backspace) {
-        if (_selectedPointIndex != null) {
-          setState(() {
-            _currentPoints.removeAt(_selectedPointIndex!);
-            _reindexPoints();
-            _selectedPointIndex = null;
-          });
-        }
-      }
+  void _loadCommandForEditing(AppState appState, int commandIndex) {
+    if (appState.currentPath == null || 
+        commandIndex >= appState.currentPath!.commands.length) {
+      return;
     }
-  }
 
+    final command = appState.currentPath!.commands[commandIndex];
+    
+    // Only load if it's a CommandBlock with points
+    if (command is CommandBlock) {
+      final points = CommandUtils.getPointsFromCommand(command);
+      if (points != null && points.isNotEmpty) {
+        setState(() {
+          _currentPoints = List.from(points);
+          _editingCommandIndex = commandIndex;
+          _selectedPointIndex = null;
+          _showConnections = points.length >= 2;
+        });
+      }
+      }
+  }
+  
   void _addPoint(Offset position) {
     setState(() {
       final newPoint = PointNode(
@@ -255,30 +311,49 @@ class _PathEditorPageState extends State<PathEditorPage> {
   void _saveCurrentPath(BuildContext context, AppState appState) {
     if (_currentPoints.isEmpty) return;
 
-    // Create command with points in arguments
-    final commandBlock = CommandBlock(
-      index: appState.currentPath?.commands.length ?? 0,
-      commands: ['PurePursuitFollowPath'],
-      arguments: {
-        'points': _currentPoints.map((p) => p.toJson()).toList(),
-      },
-    );
+    if (_editingCommandIndex != null) {
+      // Update existing command
+      final command = appState.currentPath!.commands[_editingCommandIndex!] as CommandBlock;
+      CommandUtils.setPointsInCommand(command, List.from(_currentPoints));
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Command updated'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      // Create new command
+      final commandBlock = CommandBlock(
+        index: appState.currentPath?.commands.length ?? 0,
+        commands: ['PurePursuitFollowPath'],
+        arguments: {
+          'points': _currentPoints.map((p) => p.toJson()).toList(),
+        },
+      );
 
-    appState.currentPath?.addCommand(commandBlock);
+      appState.currentPath?.addCommand(commandBlock);
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Path saved to commands'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+
+    appState.notifyListeners();
     
     setState(() {
       _currentPoints.clear();
       _selectedPointIndex = null;
       _showConnections = false;
+      _editingCommandIndex = null;
     });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Path saved to commands'),
-        backgroundColor: Colors.green,
-        duration: Duration(seconds: 2),
-      ),
-    );
+    
+    appState.selectCommand(null);
   }
 
   void _showAddCommandDialog(BuildContext context, AppState appState) {

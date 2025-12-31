@@ -95,7 +95,6 @@ class _PointEditorState extends State<PointEditor> {
                   child: _buildTextField(
                     controller: _xController,
                     label: 'X (m)',
-                    onChanged: (_) => _updatePoint(),
                   ),
                 ),
                 const SizedBox(width: AppStyles.smallPadding),
@@ -103,7 +102,6 @@ class _PointEditorState extends State<PointEditor> {
                   child: _buildTextField(
                     controller: _yController,
                     label: 'Y (m)',
-                    onChanged: (_) => _updatePoint(),
                   ),
                 ),
               ],
@@ -115,7 +113,6 @@ class _PointEditorState extends State<PointEditor> {
                   child: _buildTextField(
                     controller: _angleController,
                     label: 'Angle (°)',
-                    onChanged: (_) => _updatePoint(),
                   ),
                 ),
                 const SizedBox(width: AppStyles.smallPadding),
@@ -123,7 +120,6 @@ class _PointEditorState extends State<PointEditor> {
                   child: _buildTextField(
                     controller: _timeController,
                     label: 'Time (s)',
-                    onChanged: (_) => _updatePoint(),
                   ),
                 ),
               ],
@@ -137,7 +133,6 @@ class _PointEditorState extends State<PointEditor> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
-    required Function(String) onChanged,
   }) {
     return TextField(
       controller: controller,
@@ -149,11 +144,17 @@ class _PointEditorState extends State<PointEditor> {
           vertical: AppStyles.smallPadding,
         ),
       ),
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),
       ],
-      onChanged: onChanged,
+      // Only update when user is done editing (loses focus or presses enter)
+      onSubmitted: (_) => _updatePoint(),
+      onEditingComplete: _updatePoint,
+      onTapOutside: (_) {
+        FocusScope.of(context).unfocus();
+        _updatePoint();
+      },
       style: AppStyles.bodyStyle,
     );
   }

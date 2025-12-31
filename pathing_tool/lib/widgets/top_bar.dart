@@ -15,9 +15,19 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     return Consumer<AppState>(
       builder: (context, appState, _) {
         return AppBar(
-          title: Text(
-            appState.currentPath?.pathName ?? 'Autonomous Editor',
-            style: AppStyles.titleStyle.copyWith(color: Colors.white),
+          title: GestureDetector(
+            onTap: () => _showEditNameDialog(context, appState),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  appState.currentPath?.pathName ?? 'Autonomous Editor',
+                  style: AppStyles.titleStyle.copyWith(color: Colors.white),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.edit, size: 18, color: Colors.white70),
+              ],
+            ),
           ),
           backgroundColor: AppStyles.primaryColor,
           actions: [
@@ -56,6 +66,50 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         );
       },
+    );
+  }
+
+  void _showEditNameDialog(BuildContext context, AppState appState) {
+    if (appState.currentPath == null) return;
+
+    final controller = TextEditingController(text: appState.currentPath!.pathName);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Autonomous Name'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(
+            labelText: 'Name',
+            border: OutlineInputBorder(),
+          ),
+          autofocus: true,
+          onSubmitted: (value) {
+            if (value.trim().isNotEmpty) {
+              appState.currentPath!.pathName = value.trim();
+              appState.notifyListeners();
+              Navigator.of(context).pop();
+            }
+          },
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (controller.text.trim().isNotEmpty) {
+                appState.currentPath!.pathName = controller.text.trim();
+                appState.notifyListeners();
+                Navigator.of(context).pop();
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
     );
   }
 
