@@ -172,7 +172,9 @@ class _PathEditorPageState extends State<PathEditorPage> {
                         child: _selectedPointIndex != null &&
                                 _selectedPointIndex! < _currentPoints.length
                             ? SingleChildScrollView(
+                                key: ValueKey(_selectedPointIndex),
                                 child: PointEditor(
+                                  key: ValueKey('point_${_selectedPointIndex}_${_currentPoints[_selectedPointIndex!].x}_${_currentPoints[_selectedPointIndex!].y}'),
                                   point: _currentPoints[_selectedPointIndex!],
                                   onPointChanged: (updatedPoint) {
                                     setState(() {
