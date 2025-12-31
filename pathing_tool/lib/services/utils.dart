@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:pathing_tool/models/command_block.dart';
 import 'package:pathing_tool/models/point_node.dart';
+import 'package:pathing_tool/models/robot_profile.dart';
 
 class GeometryUtils {
   static double degreesToRadians(double degrees) {
@@ -9,6 +10,10 @@ class GeometryUtils {
 
   static double radiansToDegrees(double radians) {
     return radians * 180.0 / pi;
+  }
+
+  static double get diagonal {
+  return sqrt(RobotProfile.defaultProfile.length * RobotProfile.defaultProfile.length + RobotProfile.defaultProfile.width * RobotProfile.defaultProfile.width);
   }
 
   // Keep angle between -π and π

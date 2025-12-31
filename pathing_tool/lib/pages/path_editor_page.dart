@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:pathing_tool/state/app_state.dart';
 import 'package:pathing_tool/models/point_node.dart';
 import 'package:pathing_tool/models/command_block.dart';
-import 'package:pathing_tool/services/geometry_utils.dart';
+import 'package:pathing_tool/services/utils.dart';
 import 'package:pathing_tool/widgets/top_bar.dart';
 import 'package:pathing_tool/widgets/grid_canvas.dart';
 import 'package:pathing_tool/widgets/point_editor.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pathing_tool/models/command_block.dart';
-import 'package:pathing_tool/services/geometry_utils.dart';
+import 'package:pathing_tool/services/utils.dart';
 import 'package:pathing_tool/ui/styles.dart';
 
 class CommandBlockWidget extends StatelessWidget {
