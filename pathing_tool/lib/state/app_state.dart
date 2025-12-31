@@ -1,12 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:pathing_tool/models/path_data.dart';
 import 'package:pathing_tool/models/robot_profile.dart';
+import 'package:pathing_tool/models/field_profile.dart';
 import 'undo_redo_service.dart';
 
 class AppState extends ChangeNotifier {
   // Current autonomous path being edited
   PathData? _currentPath;
   
+  // Field profile
+  final FieldProfile fieldProfile = FieldProfile.defaultProfile;
   // Robot profile
   final RobotProfile robotProfile = RobotProfile.defaultProfile;
   

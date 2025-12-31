@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:pathing_tool/models/point_node.dart';
 import 'package:pathing_tool/models/robot_profile.dart';
+import 'package:pathing_tool/models/field_profile.dart';
 import 'package:pathing_tool/ui/styles.dart';
 
 class GridCanvas extends StatefulWidget {
   final RobotProfile robotProfile;
+  final FieldProfile fieldProfile;
   final List<PointNode> points;
   final Function(Offset) onPointAdded;
   final Function(int) onPointSelected;
@@ -15,6 +17,7 @@ class GridCanvas extends StatefulWidget {
   const GridCanvas({
     super.key,
     required this.robotProfile,
+    required this.fieldProfile,
     required this.points,
     required this.onPointAdded,
     required this.onPointSelected,
@@ -54,6 +57,7 @@ class _GridCanvasState extends State<GridCanvas> {
                 size: size,
                 painter: GridPainter(
                   robotProfile: widget.robotProfile,
+                  fieldProfile: widget.fieldProfile,
                   points: widget.points,
                   selectedPointIndex: widget.selectedPointIndex,
                   showConnections: widget.showConnections,
@@ -89,22 +93,23 @@ class _GridCanvasState extends State<GridCanvas> {
   }
 
   Offset _screenToField(Offset screenPos, Size canvasSize) {
-    final x = (screenPos.dx / canvasSize.width) * widget.robotProfile.fieldWidth;
-    final y = widget.robotProfile.fieldHeight - 
-        (screenPos.dy / canvasSize.height) * widget.robotProfile.fieldHeight;
+    final x = (screenPos.dx / canvasSize.width) * widget.fieldProfile.fieldWidth;
+    final y = widget.fieldProfile.fieldHeight - 
+        (screenPos.dy / canvasSize.height) * widget.fieldProfile.fieldHeight;
     return Offset(x, y);
   }
    
   Offset _fieldToScreen(Offset fieldPos, Size canvasSize) {
-    final x = (fieldPos.dx / widget.robotProfile.fieldWidth) * canvasSize.width;
+    final x = (fieldPos.dx / widget.fieldProfile.fieldWidth) * canvasSize.width;
     final y = canvasSize.height - 
-        (fieldPos.dy / widget.robotProfile.fieldHeight) * canvasSize.height;
+        (fieldPos.dy / widget.fieldProfile.fieldHeight) * canvasSize.height;
     return Offset(x, y);
   }
 }
 
 class GridPainter extends CustomPainter {
   final RobotProfile robotProfile;
+  final FieldProfile fieldProfile;
   final List<PointNode> points;
   final int? selectedPointIndex;
   final bool showConnections;
@@ -113,11 +118,12 @@ class GridPainter extends CustomPainter {
 
   GridPainter({
     required this.robotProfile,
+    required this.fieldProfile,
     required this.points,
     this.selectedPointIndex,
     required this.showConnections,
     this.hoverPosition,
-    this.onPointTapped,
+    this.onPointTapped, 
   }); 
 
   @override
@@ -150,8 +156,8 @@ class GridPainter extends CustomPainter {
     );
 
     // Draw vertical lines
-    for (double x = 0; x <= robotProfile.fieldWidth; x += AppStyles.gridMinorSpacing) {
-      final screenX = (x / robotProfile.fieldWidth) * size.width;
+    for (double x = 0; x <= fieldProfile.fieldWidth; x += AppStyles.gridMinorSpacing) {
+      final screenX = (x / fieldProfile.fieldWidth) * size.width;
       final isMajor = (x % AppStyles.gridMajorSpacing) == 0;
       
       canvas.drawLine(
@@ -175,8 +181,8 @@ class GridPainter extends CustomPainter {
     }
 
     // Draw horizontal lines
-    for (double y = 0; y <= robotProfile.fieldHeight; y += AppStyles.gridMinorSpacing) {
-      final screenY = size.height - (y / robotProfile.fieldHeight) * size.height;
+    for (double y = 0; y <= fieldProfile.fieldHeight; y += AppStyles.gridMinorSpacing) {
+      final screenY = size.height - (y / fieldProfile.fieldHeight) * size.height;
       final isMajor = (y % AppStyles.gridMajorSpacing) == 0;
       
       canvas.drawLine(
@@ -227,8 +233,8 @@ class GridPainter extends CustomPainter {
     final screenPos = _fieldToScreen(Offset(point.x, point.y), size);
     
     // Calculate robot size in screen coordinates
-    final robotWidth = (robotProfile.width / robotProfile.fieldWidth) * size.width;
-    final robotHeight = (robotProfile.length / robotProfile.fieldHeight) * size.height;
+    final robotWidth = (robotProfile.width / fieldProfile.fieldWidth) * size.width;
+    final robotHeight = (robotProfile.length / fieldProfile.fieldHeight) * size.height;
 
     canvas.save();
     canvas.translate(screenPos.dx, screenPos.dy);
@@ -299,9 +305,9 @@ class GridPainter extends CustomPainter {
   }
 
   Offset _fieldToScreen(Offset fieldPos, Size canvasSize) {
-    final x = (fieldPos.dx / robotProfile.fieldWidth) * canvasSize.width;
+    final x = (fieldPos.dx / fieldProfile.fieldWidth) * canvasSize.width;
     final y = canvasSize.height - 
-        (fieldPos.dy / robotProfile.fieldHeight) * canvasSize.height;
+        (fieldPos.dy / fieldProfile.fieldHeight) * canvasSize.height;
     return Offset(x, y);
   }
 

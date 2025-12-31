@@ -192,17 +192,17 @@ class _PathEditorPageState extends State<PathEditorPage> {
                         child: GestureDetector(
                           onTap: () => _canvasFocusNode.requestFocus(),
                           child: GridCanvas(
-                            robotProfile: appState.robotProfile,
-                            points: _currentPoints,
-                            selectedPointIndex: _selectedPointIndex,
-                            showConnections: _showConnections,
-                            onPointAdded: _addPoint,
-                            onPointSelected: (index) {
-                              setState(() {
-                                _selectedPointIndex = index;
-                              });
-                            },
-                          ),
+                              robotProfile: appState.robotProfile,
+                              points: _currentPoints,
+                              selectedPointIndex: _selectedPointIndex,
+                              showConnections: _showConnections,
+                              onPointAdded: _addPoint,
+                              onPointSelected: (index) {
+                                setState(() {
+                                  _selectedPointIndex = index;
+                                });
+                              }, fieldProfile: appState.fieldProfile,
+                            ),
                         ),
                       ),
                     ),
