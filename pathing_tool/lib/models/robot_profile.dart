@@ -30,8 +30,4 @@ class RobotProfile {
     fieldHeight: 8.052,
   );
 
-  
- double get diagonal {
-  return sqrt(length * length + width * width);
-}
 }
