@@ -18,7 +18,7 @@ class GridCanvas extends StatefulWidget {
     super.key,
     required this.robotProfile,
     required this.fieldProfile,
-    required this.points,
+    required this.points, 
     required this.onPointAdded,
     required this.onPointSelected,
     this.selectedPointIndex,
@@ -298,7 +298,7 @@ class GridPainter extends CustomPainter {
     if (hoverPosition == null) return;
 
     final paint = Paint()
-      ..color = AppStyles.pointColor.withOpacity(0.3)
+      ..color = AppStyles.pointColor.withValues(alpha: 0.3)
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(hoverPosition!, 5, paint);
@@ -319,3 +319,6 @@ class GridPainter extends CustomPainter {
         oldDelegate.hoverPosition != hoverPosition;
   }
 }
+
+
+

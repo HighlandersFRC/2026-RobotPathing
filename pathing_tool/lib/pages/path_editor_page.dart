@@ -66,7 +66,7 @@ class _PathEditorPageState extends State<PathEditorPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(AppStyles.defaultPadding),
-                      color: AppStyles.primaryColor,
+                      color: AppStyles.secondaryColor,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -217,7 +217,7 @@ class _PathEditorPageState extends State<PathEditorPage> {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(AppStyles.defaultPadding),
-                      color: AppStyles.primaryColor,
+                      color: AppStyles.secondaryColor,
                       child: Row(
                         children: [
                           Text(

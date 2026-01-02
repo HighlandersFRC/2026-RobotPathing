@@ -27,7 +27,7 @@ class CommandBlock {
       'index': index,
       'type': type,
       'commands': commands,
-      'arguments': arguments,
+      'arguments': arguments, 
     };
   }
 

@@ -57,7 +57,7 @@ class PathData {
       }).toList(),
     };
   }
-
+  
   // Add a command (index automatically updated)
   void addCommand(dynamic command) {
     if (command is CommandBlock || command is SwitchBlock) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppStyles {
   // Colors
   static const Color primaryColor = Color(0xFF2196F3); 
+  static const Color secondaryColor =  Color.fromARGB(217, 43, 200, 228);
   static const Color accentColor = Color(0xFF03A9F4); 
   static const Color backgroundColor = Color(0xFFF5F5F5);
   static const Color gridBackgroundColor = Color(0xFFFFFFFF); 
@@ -14,7 +15,7 @@ class AppStyles {
   static const Color selectedPointColor = Color(0xFFFF9800); 
   static const Color pathLineColor = Color(0xFF9C27B0); 
   static const Color errorColor = Color(0xFFF44336); 
-  
+
   // Text Styles
   static const TextStyle titleStyle = TextStyle(
     fontSize: 20,
