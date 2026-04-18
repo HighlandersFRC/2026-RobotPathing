@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'path_editor_page.dart';
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('FRC Pathing Tool'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const PathEditorPage(),
+                  ),
+                );
+              },
+              child: const Text('New Autonomous'),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Autonomous Loading Coming Soon'),
+                    backgroundColor: Color.fromARGB(224, 80, 197, 244),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              },
+              child: const Text('Load Autonomous'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
