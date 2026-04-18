@@ -129,7 +129,7 @@ class _PointEditorState extends State<PointEditor> {
       ),
     );
   }
-
+  
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,

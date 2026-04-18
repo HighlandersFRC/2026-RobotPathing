@@ -12,8 +12,10 @@ class PathData {
     this.sampleRate = 1.0,
     this.pathVersion = "0.0.1",
     required this.commands,
-  });
-
+  });                     
+                                                                     
+                                                                     
+                                                                     
   // Create empty path
   factory PathData.empty() {
     return PathData(
@@ -21,12 +23,12 @@ class PathData {
       commands: [],
     );
   }
-         
+
   // Convert from JSON
   factory PathData.fromJson(Map<String, dynamic> json) {
     final commandsList = (json['commands'] as List).map((cmdJson) {
       final type = cmdJson['type'] as String;
-      if (type == 'Switch') {
+      if (type == 'Switch') {                
         return SwitchBlock.fromJson(cmdJson as Map<String, dynamic>);
       } else {
         return CommandBlock.fromJson(cmdJson as Map<String, dynamic>);

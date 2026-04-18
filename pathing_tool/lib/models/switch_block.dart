@@ -31,16 +31,16 @@ class SwitchBlock {
           .toList(),
     );
   }
-
-  // Convert to JSON
+                                                                              
+  // Convert to JSON  
   Map<String, dynamic> toJson() {
-    return {
-      'index': index,
-      'type': blockType,
-      'condition': condition,
-      'conditionArguments': conditionArguments,
-      'onTrue': onTrue.map((cb) => cb.toJson()).toList(),
-      'onFalse': onFalse.map((cb) => cb.toJson()).toList(),
-    };
-  }
-}
+    return {           
+      'index': index,            
+      'type': blockType,              
+      'condition': condition,                                 
+      'conditionArguments': conditionArguments,                  
+      'onTrue': onTrue.map((cb) => cb.toJson()).toList(),           
+      'onFalse': onFalse.map((cb) => cb.toJson()).toList(),            
+    };      
+  }                
+}                                          

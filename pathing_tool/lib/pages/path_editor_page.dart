@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pathing_tool/models/command_definition.dart';
+import 'package:pathing_tool/widgets/command_parameter_form.dart';
 import 'package:provider/provider.dart';
 import 'package:pathing_tool/state/app_state.dart';
 import 'package:pathing_tool/models/point_node.dart';
@@ -48,7 +50,7 @@ class _PathEditorPageState extends State<PathEditorPage> {
     return Consumer<AppState>(
       builder: (context, appState, _) {
         // Listen for command selection to load it for editing
-        if (appState.selectedCommandIndex != null && 
+        if (appState.selectedCommandIndex != null &&
             appState.selectedCommandIndex != _editingCommandIndex) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _loadCommandForEditing(appState, appState.selectedCommandIndex!);
@@ -72,11 +74,13 @@ class _PathEditorPageState extends State<PathEditorPage> {
                         children: [
                           Text(
                             'Commands',
-                            style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
+                            style: AppStyles.subtitleStyle
+                                .copyWith(color: Colors.white),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add, color: Colors.white),
-                            onPressed: () => _showAddCommandDialog(context, appState),
+                            onPressed: () =>
+                                _showAddCommandDialog(context, appState),
                             tooltip: 'Add Command',
                           ),
                         ],
@@ -136,8 +140,11 @@ class _PathEditorPageState extends State<PathEditorPage> {
                                     });
                                   }
                                 : null,
-                            icon: Icon(_showConnections ? Icons.link_off : Icons.link),
-                            label: Text(_showConnections ? 'Hide Path' : 'Connect Points'),
+                            icon: Icon(
+                                _showConnections ? Icons.link_off : Icons.link),
+                            label: Text(_showConnections
+                                ? 'Hide Path'
+                                : 'Connect Points'),
                           ),
                           const SizedBox(width: AppStyles.smallPadding),
                           ElevatedButton.icon(
@@ -145,7 +152,9 @@ class _PathEditorPageState extends State<PathEditorPage> {
                                 ? () => _saveCurrentPath(context, appState)
                                 : null,
                             icon: const Icon(Icons.check),
-                            label: Text(_editingCommandIndex != null ? 'Update Command' : 'Save to Commands'),
+                            label: Text(_editingCommandIndex != null
+                                ? 'Update Command'
+                                : 'Save to Commands'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppStyles.accentColor,
                             ),
@@ -162,7 +171,8 @@ class _PathEditorPageState extends State<PathEditorPage> {
                                 });
                                 appState.selectCommand(null);
                               },
-                              icon: const Icon(Icons.clear, color: AppStyles.errorColor),
+                              icon: const Icon(Icons.clear,
+                                  color: AppStyles.errorColor),
                               label: const Text('Clear All'),
                             ),
                         ],
@@ -176,7 +186,8 @@ class _PathEditorPageState extends State<PathEditorPage> {
                           if (event is KeyDownEvent) {
                             // Delete selected point
                             if (event.logicalKey == LogicalKeyboardKey.delete ||
-                                event.logicalKey == LogicalKeyboardKey.backspace) {
+                                event.logicalKey ==
+                                    LogicalKeyboardKey.backspace) {
                               if (_selectedPointIndex != null) {
                                 setState(() {
                                   _currentPoints.removeAt(_selectedPointIndex!);
@@ -192,17 +203,18 @@ class _PathEditorPageState extends State<PathEditorPage> {
                         child: GestureDetector(
                           onTap: () => _canvasFocusNode.requestFocus(),
                           child: GridCanvas(
-                              robotProfile: appState.robotProfile,
-                              points: _currentPoints,
-                              selectedPointIndex: _selectedPointIndex,
-                              showConnections: _showConnections,
-                              onPointAdded: _addPoint,
-                              onPointSelected: (index) {
-                                setState(() {
-                                  _selectedPointIndex = index;
-                                });
-                              }, fieldProfile: appState.fieldProfile,
-                            ),
+                            robotProfile: appState.robotProfile,
+                            points: _currentPoints,
+                            selectedPointIndex: _selectedPointIndex,
+                            showConnections: _showConnections,
+                            onPointAdded: _addPoint,
+                            onPointSelected: (index) {
+                              setState(() {
+                                _selectedPointIndex = index;
+                              });
+                            },
+                            fieldProfile: appState.fieldProfile,
+                          ),
                         ),
                       ),
                     ),
@@ -222,7 +234,8 @@ class _PathEditorPageState extends State<PathEditorPage> {
                         children: [
                           Text(
                             'Point Properties',
-                            style: AppStyles.subtitleStyle.copyWith(color: Colors.white),
+                            style: AppStyles.subtitleStyle
+                                .copyWith(color: Colors.white),
                           ),
                         ],
                       ),
@@ -233,16 +246,19 @@ class _PathEditorPageState extends State<PathEditorPage> {
                           ? SingleChildScrollView(
                               key: ValueKey(_selectedPointIndex),
                               child: PointEditor(
-                                key: ValueKey('point_${_selectedPointIndex}_${_currentPoints[_selectedPointIndex!].x}_${_currentPoints[_selectedPointIndex!].y}'),
+                                key: ValueKey(
+                                    'point_${_selectedPointIndex}_${_currentPoints[_selectedPointIndex!].x}_${_currentPoints[_selectedPointIndex!].y}'),
                                 point: _currentPoints[_selectedPointIndex!],
                                 onPointChanged: (updatedPoint) {
                                   setState(() {
-                                    _currentPoints[_selectedPointIndex!] = updatedPoint;
+                                    _currentPoints[_selectedPointIndex!] =
+                                        updatedPoint;
                                   });
                                 },
                                 onDelete: () {
                                   setState(() {
-                                    _currentPoints.removeAt(_selectedPointIndex!);
+                                    _currentPoints
+                                        .removeAt(_selectedPointIndex!);
                                     _reindexPoints();
                                     _selectedPointIndex = null;
                                   });
@@ -267,13 +283,13 @@ class _PathEditorPageState extends State<PathEditorPage> {
   }
 
   void _loadCommandForEditing(AppState appState, int commandIndex) {
-    if (appState.currentPath == null || 
+    if (appState.currentPath == null ||
         commandIndex >= appState.currentPath!.commands.length) {
       return;
     }
 
     final command = appState.currentPath!.commands[commandIndex];
-    
+
     // Only load if it's a CommandBlock with points
     if (command is CommandBlock) {
       final points = CommandUtils.getPointsFromCommand(command);
@@ -285,9 +301,9 @@ class _PathEditorPageState extends State<PathEditorPage> {
           _showConnections = points.length >= 2;
         });
       }
-      }
+    }
   }
-  
+
   void _addPoint(Offset position) {
     setState(() {
       final newPoint = PointNode(
@@ -313,9 +329,10 @@ class _PathEditorPageState extends State<PathEditorPage> {
 
     if (_editingCommandIndex != null) {
       // Update existing command
-      final command = appState.currentPath!.commands[_editingCommandIndex!] as CommandBlock;
+      final command =
+          appState.currentPath!.commands[_editingCommandIndex!] as CommandBlock;
       CommandUtils.setPointsInCommand(command, List.from(_currentPoints));
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Command updated'),
@@ -334,7 +351,7 @@ class _PathEditorPageState extends State<PathEditorPage> {
       );
 
       appState.currentPath?.addCommand(commandBlock);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Path saved to commands'),
@@ -345,54 +362,44 @@ class _PathEditorPageState extends State<PathEditorPage> {
     }
 
     appState.notifyListeners();
-    
+
     setState(() {
       _currentPoints.clear();
       _selectedPointIndex = null;
       _showConnections = false;
       _editingCommandIndex = null;
     });
-    
+
     appState.selectCommand(null);
   }
 
   void _showAddCommandDialog(BuildContext context, AppState appState) {
+    final availableCommands = appState.robotProfile.availableCommands;
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Add Command'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.route),
-              title: const Text('Pure Pursuit Path'),
-              subtitle: const Text('Create a new path with waypoints'),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Click on the grid to add waypoints'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.call_split),
-              title: const Text('Switch Command'),
-              subtitle: const Text('Conditional branching'),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Switch commands coming soon'),
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              },
-            ),
-          ],
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: availableCommands.length,
+            itemBuilder: (context, index) {
+              final cmdDef = availableCommands[index];
+              return ListTile(
+                leading: Icon(_getIconData(cmdDef.icon)),
+                title: Text(cmdDef.displayName),
+                subtitle: cmdDef.description != null
+                    ? Text(cmdDef.description!)
+                    : null,
+                onTap: () {
+                  Navigator.of(context).pop();
+                  _handleCommandSelection(context, appState, cmdDef);
+                },
+              );
+            },
+          ),
         ),
         actions: [
           TextButton(
@@ -400,6 +407,72 @@ class _PathEditorPageState extends State<PathEditorPage> {
             child: const Text('Cancel'),
           ),
         ],
+      ),
+    );
+  }
+
+  IconData _getIconData(String iconName) {
+    switch (iconName) {
+      case 'route':
+        return Icons.route;
+      case 'elevator':
+        return Icons.elevator;
+      case 'power':
+        return Icons.power;
+      default:
+        return Icons.settings;
+    }
+  }
+
+  void _handleCommandSelection(
+    BuildContext context,
+    AppState appState,
+    CommandDefinition cmdDef,
+  ) {
+    if (cmdDef.requiresPathPoints) {
+      // Path command - just show message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Click on the grid to add waypoints, then save'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      // Non-path command - show parameter form
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          content: CommandParameterForm(
+            commandDef: cmdDef,
+            initialValues: const {},
+            onSubmit: (values) {
+              _addNonPathCommand(appState, cmdDef, values);
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  void _addNonPathCommand(
+    AppState appState,
+    CommandDefinition cmdDef,
+    Map<String, dynamic> arguments,
+  ) {
+    final commandBlock = CommandBlock(
+      index: appState.currentPath?.commands.length ?? 0,
+      commands: [cmdDef.name],
+      arguments: arguments,
+    );
+
+    appState.currentPath?.addCommand(commandBlock);
+    appState.notifyListeners();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('${cmdDef.displayName} added'),
+        backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
       ),
     );
   }

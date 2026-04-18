@@ -61,9 +61,9 @@ class FileService {
     } catch (e) {
       print('Error importing path: $e');
       return null;
-    }
-  }
-
+    } 
+  }   
+      
   static bool isValidPathJson(Map<String, dynamic> json) {
     try {
       return json.containsKey('pathName') &&

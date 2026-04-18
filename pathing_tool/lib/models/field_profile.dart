@@ -10,10 +10,10 @@ class FieldProfile {
     this.fieldHeight = 8.052,
   });
 
- 
+
   static const FieldProfile defaultProfile = FieldProfile(
     fieldWidth: 17.548,
     fieldHeight: 8.052,
   );
-
+  
 }

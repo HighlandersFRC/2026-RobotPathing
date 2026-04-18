@@ -12,7 +12,7 @@ class PointNode {
     required this.angle,
     required this.time,
   });
-
+  
   // Convert from JSON
   factory PointNode.fromJson(Map<String, dynamic> json) {
     return PointNode(
